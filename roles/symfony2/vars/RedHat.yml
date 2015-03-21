@@ -1,0 +1,23 @@
+---
+yum_remi_packages:
+  - git
+  - curl
+  - nginx
+  - php
+  - php-common
+  - php-devel
+  - php-mbstring
+  - php-pdo
+  - php-pecl-apcu
+  - php-xml
+  - php-fpm
+yum_repositories:
+  - http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+  - http://ftp-srv2.kddilabs.jp/Linux/distributions/fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm
+config_files:
+  - /etc/php.ini
+  - /etc/php-fpm.conf
+  - /etc/php-fpm.d/www.conf
+  - /etc/nginx/nginx.conf
+  - /etc/nginx/conf.d/default.conf
+  - /etc/nginx/conf.d/virtual.conf

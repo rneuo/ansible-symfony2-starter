@@ -1,0 +1,36 @@
+---
+- name: include os variables
+  include_vars: "../vars/{{ ansible_os_family }}.yml"
+  tags:
+    - symfony2:yum
+
+- name: install yum repositories
+  sudo: yes
+  yum: name={{ item }}
+  with_items: yum_repositories
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - symfony2:yum
+
+- name: yum remove php-*
+  sudo: yes
+  yum: name=php-* state=absent
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - symfony2:yum
+
+- name: install yum remi packages
+  sudo: yes
+  yum: name={{ item }} state=present enablerepo=remi
+  always_run: yes
+  with_items: yum_remi_packages
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - symfony2:yum
+
+- name: chkconfig nginx on chkconfig php-fpm on
+  sudo: yes
+  shell: chkconfig nginx on && chkconfig php-fpm on
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - symfony2:yum

@@ -1,0 +1,13 @@
+[webserver]
+192.168.33.11
+
+[dbserver]
+192.168.33.11
+
+[webserver:vars]
+server_name=192.168.33.11
+work_dir=/var/www
+project_name=sample
+symfony_index_script=app_dev.php
+session_save_path=/tmp/session
+[dbserver:vars]

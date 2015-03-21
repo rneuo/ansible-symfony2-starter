@@ -1,0 +1,15 @@
+---
+- name: install the mysql packages
+  yum: name={{ item }} state=installed
+  with_items: mysql_pkgs
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - mysql
+    - mysql:install
+
+- name: chkconfig mysqld on
+  shell: chkconfig mysqld on
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - mysql
+    - mysql:install

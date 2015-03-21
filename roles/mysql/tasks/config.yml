@@ -1,0 +1,13 @@
+---
+- name: copy my.cnf
+  sudo: yes
+  template: src=../files/my.cnf.j2 dest={{ mysql_conf_dir }}/my.cnf mode=0600
+  tags:
+    - mysql
+    - mysql:config
+
+- name: restart mysql
+  service: name={{ mysql_service }} state=restarted
+  tags:
+    - mysql
+    - mysql:config

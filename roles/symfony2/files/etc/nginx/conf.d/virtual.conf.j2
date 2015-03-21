@@ -1,0 +1,30 @@
+
+server {
+  set $index_script "{{ symfony_index_script }}";
+  listen 80;
+  server_name {{ server_name }};
+
+  charset utf-8;
+
+  gzip on;
+  gzip_min_length 1000;
+  gzip_types text/plain text/css application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+  gzip_disable "MSIE [1-6]\.";
+
+  access_log /var/log/nginx/{{ server_name }}.access.log;
+
+  root {{ work_dir }}/{{ project_name }}/web;
+
+  location / {
+    index $index_script;
+  }
+
+  location ~ \.php$ {
+    fastcgi_index $index_script;
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param SCRIPT_NAME $fastcgi_script_name;
+    fastcgi_param PATH_INFO $fastcgi_path_info;
+    fastcgi_pass 127.0.0.1:9000;
+  }
+}

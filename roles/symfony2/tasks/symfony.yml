@@ -1,0 +1,38 @@
+---
+- name: has already installed symfony
+  stat: path=/usr/local/bin/symfony
+  register: symfony_already
+  always_run: yes
+  tags:
+    - symfony2:symfony
+
+- name: symfony install
+  sudo: yes
+  shell: curl -LsS http://symfony.com/installer > /tmp/symfony.phar && mv /tmp/symfony.phar /usr/local/bin/symfony && chmod 0755 /usr/local/bin/symfony
+  when: symfony_already.stat.exists != True
+  tags:
+    - symfony2:symfony
+
+- name: create new project
+  sudo: yes
+  shell: chdir={{ work_dir }} /usr/local/bin/symfony new sample && cd sample && /usr/local/bin/composer up
+  tags:
+    - symfony2:symfony
+
+- name: chown sample app
+  sudo: yes
+  shell: chown nginx:nginx -R {{ work_dir }}/{{ project_name }}
+  tags:
+    - symfony2:symfony
+
+- name: replace
+  sudo: yes
+  replace: dest={{ work_dir }}/{{ project_name }}/web/app_dev.php regexp='header*' replace="// header" backup=no
+  tags:
+    - symfony2:replace
+
+- name: replace
+  sudo: yes
+  replace: dest={{ work_dir }}/{{ project_name }}/web/app_dev.php regexp='exit*' replace="// exit" backup=no
+  tags:
+    - symfony2:replace

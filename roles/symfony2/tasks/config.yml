@@ -1,0 +1,26 @@
+---
+- name: include os variables
+  include_vars: "../vars/{{ ansible_os_family }}.yml"
+  tags:
+    - symfony2:config
+
+- name: create session dir
+  sudo: yes
+  file: path=/tmp/session state=directory owner=nginx group=nginx mode=0755
+  tags:
+    - symfony2:config
+
+- name: copy config files
+  sudo: yes
+  template: src=../files/{{ item }}.j2 dest={{ item }}
+  with_items: config_files
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - symfony2:config
+
+- name: restart php-fpm
+  sudo: yes
+  shell: service php-fpm restart && service nginx restart
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - symfony2:config
